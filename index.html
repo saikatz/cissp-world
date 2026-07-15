@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CISSP World — Adaptive Practice Exam</title>
+<meta name="description" content="Free adaptive CISSP practice exam engine. Computerized adaptive testing that mimics the real exam experience.">
+<link rel="stylesheet" href="css/exam.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<section id="screen-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-hero">
+      <div class="brand">CISSP<span>.world</span></div>
+      <h1>Adaptive Practice Exam Engine</h1>
+      <p>Train the way you'll be tested. Our engine re-estimates your ability after
+         every answer and adapts question difficulty — just like the real
+         computerized adaptive exam. It even ends early once it's confident,
+         so you learn to perform under real conditions.</p>
+      <ul class="hero-points">
+        <li>Real CAT algorithm — difficulty adapts to you</li>
+        <li>Short (50), Medium (100) and Full (150-question) exams</li>
+        <li>All 8 domains, weighted like the official exam outline</li>
+        <li>Per-domain proficiency report and answer explanations</li>
+        <li>Question bank grows automatically — 100% openly licensed</li>
+      </ul>
+    </div>
+    <div class="login-card">
+      <h2 id="auth-title">Candidate Sign In</h2>
+      <div id="auth-error" class="auth-error" hidden></div>
+      <label for="auth-name" id="auth-name-label" hidden>Display name</label>
+      <input type="text" id="auth-name" placeholder="Jane Doe" autocomplete="name" hidden>
+      <label for="auth-email">Email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
+      <label for="auth-pass">Password</label>
+      <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password">
+      <button id="btn-auth" class="btn primary wide">Sign In</button>
+      <p class="auth-switch">
+        <span id="auth-switch-text">No account?</span>
+        <a href="#" id="auth-switch-link">Register</a>
+      </p>
+      <div class="divider"><span>or</span></div>
+      <button id="btn-guest" class="btn ghost wide">Continue as Guest</button>
+      <p class="local-note" id="local-note" hidden>
+        ⚠ Running in practice mode — progress is saved in this browser only.
+      </p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    CISSP® is a registered trademark of ISC2. cissp.world is an independent,
+    unofficial study tool and is not affiliated with or endorsed by ISC2.
+    Questions are original works or openly licensed (CC BY-SA 4.0).
+  </footer>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section id="screen-dashboard" class="screen">
+  <header class="app-header">
+    <div class="brand small">CISSP<span>.world</span></div>
+    <div class="header-right">
+      <span id="dash-user"></span>
+      <button id="btn-signout" class="btn ghost sm">Sign out</button>
+    </div>
+  </header>
+  <main class="dash">
+    <h1 id="dash-greeting">Welcome back</h1>
+    <p class="dash-sub">Question bank: <strong id="bank-count">…</strong> openly licensed questions
+       across all 8 domains. <span id="bank-updated"></span></p>
+
+    <div class="mode-cards" id="mode-cards">
+      <!-- populated by app.js -->
+    </div>
+
+    <h2>Exam History</h2>
+    <div id="history-empty" class="muted">No exams taken yet. Your results will appear here.</div>
+    <table id="history-table" hidden>
+      <thead><tr><th>Date</th><th>Mode</th><th>Items</th><th>Result</th><th>Ended</th></tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </main>
+</section>
+
+<!-- ================= AGREEMENT / INSTRUCTIONS ================= -->
+<section id="screen-agreement" class="screen">
+  <header class="exam-header">
+    <div>CISSP World Practice Examination</div>
+    <div id="agree-candidate"></div>
+  </header>
+  <main class="paper">
+    <h1>Examination Instructions</h1>
+    <div class="instructions">
+      <p><strong id="agree-mode-desc"></strong></p>
+      <ol>
+        <li>This is a <strong>computerized adaptive test</strong>. Question difficulty
+            adjusts based on your performance.</li>
+        <li>You <strong>cannot go back</strong> to previous questions. Once you submit
+            an answer, it is final — exactly like the real exam.</li>
+        <li>The exam may <strong>end before the maximum number of questions</strong>
+            once the engine has enough confidence in its assessment of your ability.</li>
+        <li>Select the <strong>best</strong> answer. Several options may be partially
+            correct; think like a risk-driven security manager.</li>
+        <li>A timer is displayed. When time expires the exam ends automatically.</li>
+      </ol>
+      <p class="fine">This is an unofficial practice exam for self-study. It is not
+         affiliated with ISC2 and contains no real exam content. All questions are
+         original or openly licensed under CC BY-SA 4.0.</p>
+    </div>
+    <div class="paper-actions">
+      <button id="btn-agree-back" class="btn ghost">Back</button>
+      <button id="btn-begin" class="btn primary">Begin Examination</button>
+    </div>
+  </main>
+</section>
+
+<!-- ================= EXAM ================= -->
+<section id="screen-exam" class="screen">
+  <header class="exam-header">
+    <div id="exam-title">CISSP World Practice Examination</div>
+    <div id="exam-candidate"></div>
+  </header>
+  <div class="exam-subbar">
+    <div id="exam-progress">Question 1</div>
+    <div id="exam-timer" class="timer">3:00:00</div>
+  </div>
+  <main class="exam-body">
+    <div class="question-card">
+      <div id="q-domain" class="q-domain"></div>
+      <div id="q-text" class="q-text"></div>
+      <div id="q-options" class="q-options"></div>
+    </div>
+  </main>
+  <footer class="exam-footer">
+    <button id="btn-end-exam" class="btn danger ghost sm">End Exam</button>
+    <button id="btn-next" class="btn primary" disabled>Next&nbsp;▶</button>
+  </footer>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="screen-results" class="screen">
+  <header class="exam-header">
+    <div>Examination Score Report</div>
+    <div id="result-candidate"></div>
+  </header>
+  <main class="paper">
+    <div id="result-banner" class="result-banner"></div>
+    <p id="result-detail" class="result-detail"></p>
+    <h2>Domain Proficiency</h2>
+    <table class="domain-table">
+      <thead><tr><th>Domain</th><th>Items</th><th>Proficiency</th></tr></thead>
+      <tbody id="domain-body"></tbody>
+    </table>
+    <div class="paper-actions">
+      <button id="btn-review" class="btn ghost">Review Answers</button>
+      <button id="btn-done" class="btn primary">Return to Dashboard</button>
+    </div>
+  </main>
+</section>
+
+<!-- ================= REVIEW ================= -->
+<section id="screen-review" class="screen">
+  <header class="exam-header">
+    <div>Answer Review — Study Mode</div>
+    <div></div>
+  </header>
+  <main class="paper">
+    <div class="review-filter">
+      <label><input type="checkbox" id="review-only-wrong" checked> Show incorrect answers only</label>
+    </div>
+    <div id="review-list"></div>
+    <div class="paper-actions">
+      <button id="btn-review-back" class="btn primary">Back to Score Report</button>
+    </div>
+  </main>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
