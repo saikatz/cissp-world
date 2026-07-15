@@ -1,0 +1,27 @@
+{
+  "note": "Allowlist of question sources for the daily ingestion job. A source is only added here after a human has verified BOTH that the repository carries an explicit open license AND that the question content is the author's original work (a permissive LICENSE file does not launder questions copied from copyrighted books or exam dumps). Sources failing either check must not be added.",
+  "sources": [
+    {
+      "id": "cissp-world-community",
+      "type": "github_json",
+      "repo": "saikatz/cissp-world",
+      "path": "data/community-submissions.json",
+      "license": "CC-BY-SA-4.0",
+      "license_verified": true,
+      "provenance_verified": true,
+      "enabled": true,
+      "comment": "Community-submitted questions to this repository via pull request. PR review is the provenance check."
+    },
+    {
+      "id": "example-disabled-source",
+      "type": "github_json",
+      "repo": "someone/openly-licensed-cissp-bank",
+      "path": "questions.json",
+      "license": "MIT",
+      "license_verified": false,
+      "provenance_verified": false,
+      "enabled": false,
+      "comment": "Template entry. Set enabled=true only after verifying license AND provenance by hand. As of 2026-07-15 no substantial third-party bank passed both checks: repos labeled MIT were found to aggregate questions of unknown/copyrighted origin and were rejected."
+    }
+  ]
+}
