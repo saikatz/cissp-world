@@ -2,15 +2,15 @@
    cissp.world — testing-center look & feel
    ============================================================ */
 :root {
-  --navy: #0b2e59;
-  --navy-dark: #081f3d;
-  --blue: #1660c9;
-  --blue-soft: #e8f0fb;
-  --ink: #1c2430;
-  --muted: #5c6b7d;
+  --navy: #1e5b46;
+  --navy-dark: #143d2f;
+  --blue: #2f9e6b;
+  --blue-soft: #e7f5ec;
+  --ink: #1c2e26;
+  --muted: #5c7d6b;
   --paper: #ffffff;
-  --bg: #eef1f5;
-  --line: #d4dae2;
+  --bg: #eff5f0;
+  --line: #d3e0d6;
   --green: #1a7f4b;
   --red: #b3261e;
   --amber: #9a6700;
@@ -32,8 +32,8 @@ body { font-family: var(--font); background: var(--bg); color: var(--ink); font-
   padding: 10px 22px; cursor: pointer; transition: background .15s, opacity .15s;
 }
 .btn.primary { background: var(--blue); color: #fff; }
-.btn.primary:hover { background: #124fa6; }
-.btn.primary:disabled { background: #9db6d8; cursor: not-allowed; }
+.btn.primary:hover { background: #268257; }
+.btn.primary:disabled { background: #a3cdb6; cursor: not-allowed; }
 .btn.ghost { background: transparent; color: var(--blue); border-color: var(--blue); }
 .btn.ghost:hover { background: var(--blue-soft); }
 .btn.danger { color: var(--red); border-color: var(--red); }
@@ -42,21 +42,21 @@ body { font-family: var(--font); background: var(--bg); color: var(--ink); font-
 .btn.sm { padding: 6px 14px; font-size: 13px; }
 
 /* ---------- login ---------- */
-#screen-login { background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 55%, #133e75 100%); }
+#screen-login { background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 55%, #2a7a58 100%); }
 .login-wrap {
   flex: 1; display: flex; gap: 60px; align-items: center; justify-content: center;
   padding: 60px 24px; flex-wrap: wrap;
 }
-.login-hero { max-width: 520px; color: #e8eef7; }
+.login-hero { max-width: 520px; color: #eaf5ee; }
 .brand { font-size: 34px; font-weight: 800; letter-spacing: .5px; color: #fff; }
-.brand span { color: #7db3f5; font-weight: 400; }
+.brand span { color: #8fd8ac; font-weight: 400; }
 .brand.small { font-size: 20px; }
 .login-hero h1 { font-size: 26px; margin: 18px 0 12px; font-weight: 650; }
-.login-hero p { line-height: 1.55; color: #c3d2e6; }
+.login-hero p { line-height: 1.55; color: #cde5d6; }
 .hero-points { margin: 18px 0 0 2px; list-style: none; }
-.hero-points li { padding: 5px 0 5px 28px; position: relative; color: #dbe6f4; }
+.hero-points li { padding: 5px 0 5px 28px; position: relative; color: #ddeee3; }
 .hero-points li::before {
-  content: "✓"; position: absolute; left: 0; color: #7db3f5; font-weight: 700;
+  content: "✓"; position: absolute; left: 0; color: #8fd8ac; font-weight: 700;
 }
 .login-card {
   background: var(--paper); border-radius: var(--radius); padding: 32px;
@@ -80,7 +80,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--ink); font-
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .local-note { font-size: 12.5px; color: var(--amber); margin-top: 12px; line-height: 1.4; }
 .site-footer {
-  padding: 16px 24px; text-align: center; font-size: 12px; color: #8fa3bd; line-height: 1.5;
+  padding: 16px 24px; text-align: center; font-size: 12px; color: #9dbfab; line-height: 1.5;
 }
 
 /* ---------- dashboard ---------- */
@@ -89,7 +89,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--ink); font-
   display: flex; justify-content: space-between; align-items: center;
 }
 .header-right { display: flex; align-items: center; gap: 14px; font-size: 14px; }
-.header-right .btn.ghost { color: #cfe0f5; border-color: #4a6a96; }
+.header-right .btn.ghost { color: #d6ecdc; border-color: #4e8a6f; }
 .dash { max-width: 980px; margin: 0 auto; padding: 36px 24px 80px; width: 100%; }
 .dash h1 { font-size: 26px; color: var(--navy); }
 .dash-sub { color: var(--muted); margin: 8px 0 28px; }
