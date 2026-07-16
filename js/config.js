@@ -7,8 +7,8 @@
 // and stores progress in this browser only.
 // ============================================================
 window.CISSP_CONFIG = {
-  SUPABASE_URL: "",   // e.g. "https://abcdefgh.supabase.co"
-  SUPABASE_ANON_KEY: "",
+  SUPABASE_URL: "https://gmixlpcgzcbvfrygikng.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_0X698DNa-cEPpp2P50Z09A_FMv59Y6y",
 
   // Exam modes: max questions, minimum before early stop, minutes
   MODES: {
