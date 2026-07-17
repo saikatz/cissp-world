@@ -7,22 +7,14 @@
 <meta name="description" content="Free adaptive CISSP practice exam engine. Computerized adaptive testing that mimics the real exam experience.">
 <link rel="stylesheet" href="css/exam.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
-<!-- Google tag (gtag.js) with Consent Mode: analytics stays off until the visitor accepts -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QTNXCYW5BE"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('consent', 'default', {
-    analytics_storage: 'denied',
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied'
-  });
   gtag('js', new Date());
+
   gtag('config', 'G-QTNXCYW5BE');
-  if (localStorage.getItem('cissp_world_consent') === 'granted') {
-    gtag('consent', 'update', { analytics_storage: 'granted' });
-  }
 </script>
 </head>
 <body>
@@ -70,20 +62,8 @@
     CISSP® is a registered trademark of ISC2. cissp.world is an independent,
     unofficial study tool and is not affiliated with or endorsed by ISC2.
     Questions are original works or openly licensed (CC BY-SA 4.0).
-    · <a href="privacy.html" class="footer-link">Privacy</a>
   </footer>
 </section>
-
-<!-- Cookie consent banner (shown until the visitor makes a choice) -->
-<div id="cookie-banner" class="cookie-banner" hidden>
-  <p>We use Google Analytics cookies to understand how the site is used —
-     only if you agree. Essential storage for your exam session is always on.
-     <a href="privacy.html">Privacy policy</a></p>
-  <div class="cookie-actions">
-    <button id="cookie-decline" class="btn ghost sm">Decline</button>
-    <button id="cookie-accept" class="btn primary sm">Accept</button>
-  </div>
-</div>
 
 <!-- ================= DASHBOARD ================= -->
 <section id="screen-dashboard" class="screen">
