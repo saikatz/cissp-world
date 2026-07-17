@@ -26,31 +26,8 @@
     window.scrollTo(0, 0);
   }
 
-  // ---------------- analytics (consent-gated) ----------------
-  function track(event, params) {
-    if (typeof gtag === "function") gtag("event", event, params || {});
-  }
-
-  function initCookieBanner() {
-    const choice = localStorage.getItem("cissp_world_consent");
-    if (choice) return; // already decided
-    const banner = $("cookie-banner");
-    banner.hidden = false;
-    $("cookie-accept").addEventListener("click", () => {
-      localStorage.setItem("cissp_world_consent", "granted");
-      if (typeof gtag === "function")
-        gtag("consent", "update", { analytics_storage: "granted" });
-      banner.hidden = true;
-    });
-    $("cookie-decline").addEventListener("click", () => {
-      localStorage.setItem("cissp_world_consent", "denied");
-      banner.hidden = true;
-    });
-  }
-
   // ---------------- boot ----------------
   async function boot() {
-    initCookieBanner();
     if (!window.Store.cloud) $("local-note").hidden = false;
     try {
       const res = await fetch("data/questions.json", { cache: "no-store" });
@@ -179,7 +156,6 @@
   function beginExam(mode) {
     exam = new window.AdaptiveExam(bank, mode);
     finishing = false;
-    track("exam_start", { exam_mode: mode });
     $("exam-candidate").textContent = window.Store.displayName(user);
     deadline = Date.now() + cfg.MODES[mode].minutes * 60 * 1000;
     timerHandle = setInterval(tick, 500);
@@ -261,12 +237,6 @@
     finishing = true;
     clearInterval(timerHandle);
     lastSummary = exam.summary();
-    track("exam_complete", {
-      exam_mode: lastSummary.mode,
-      passed: lastSummary.passed,
-      questions: lastSummary.questions,
-      end_reason: lastSummary.endReason
-    });
     await window.Store.saveExam(user, lastSummary);
     renderResults(lastSummary);
     show("screen-results");
