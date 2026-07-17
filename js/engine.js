@@ -141,7 +141,10 @@
     }
 
     passed() {
-      // On early confident stop, the interval decides; otherwise point estimate
+      // A pass requires enough evidence: at least the minimum number of
+      // questions must have been answered (quitting early is a fail, as on
+      // the real exam). Beyond that, the ability estimate decides.
+      if (this.answered() < this.limits.min) return false;
       return this.theta >= cfg().PASS_THETA;
     }
 

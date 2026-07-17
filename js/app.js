@@ -27,17 +27,27 @@
   }
 
   // ---------------- boot ----------------
-  async function boot() {
-    if (!window.Store.cloud) $("local-note").hidden = false;
+  async function loadBank() {
     try {
       const res = await fetch("data/questions.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
+      if (!Array.isArray(data.questions) || data.questions.length === 0)
+        throw new Error("empty bank");
       bank = data.questions;
       bankMeta = data.meta || {};
+      return true;
     } catch (e) {
+      console.error("Question bank load failed:", e.message);
+      return false;
+    }
+  }
+
+  async function boot() {
+    if (!window.Store.cloud) $("local-note").hidden = false;
+    if (!(await loadBank())) {
       $("auth-error").textContent = "Could not load the question bank. Please refresh.";
       $("auth-error").hidden = false;
-      return;
     }
     user = await window.Store.currentUser();
     if (user) enterDashboard();
@@ -153,7 +163,14 @@
   $("btn-begin").addEventListener("click", () => beginExam(pendingMode));
 
   // ---------------- exam ----------------
-  function beginExam(mode) {
+  async function beginExam(mode) {
+    // Never start with an empty bank (e.g., the download failed earlier) —
+    // retry the load, and refuse to start if it still isn't there.
+    if (bank.length === 0 && !(await loadBank())) {
+      alert("The question bank could not be loaded. Please check your connection and refresh the page.");
+      show("screen-dashboard");
+      return;
+    }
     exam = new window.AdaptiveExam(bank, mode);
     finishing = false;
     $("exam-candidate").textContent = window.Store.displayName(user);
@@ -237,7 +254,9 @@
     finishing = true;
     clearInterval(timerHandle);
     lastSummary = exam.summary();
-    await window.Store.saveExam(user, lastSummary);
+    if (lastSummary.questions > 0) {
+      await window.Store.saveExam(user, lastSummary);
+    }
     renderResults(lastSummary);
     show("screen-results");
   }
