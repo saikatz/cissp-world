@@ -56,7 +56,7 @@ def fetch_github_json(source: dict):
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-    except Exception as exc:  # missing file or repo is fine — just skip
+    except Exception as exc:  # missing file or repo is fine - just skip
         print(f"  skip ({exc})")
         return []
     return data.get("questions", data if isinstance(data, list) else [])
@@ -74,7 +74,7 @@ def main() -> int:
         if not source.get("enabled"):
             continue
         if not (source.get("license_verified") and source.get("provenance_verified")):
-            print(f"[{source['id']}] enabled but not fully verified — refusing to ingest")
+            print(f"[{source['id']}] enabled but not fully verified - refusing to ingest")
             continue
         print(f"[{source['id']}] fetching {source['repo']}/{source['path']}")
         for q in fetch_github_json(source):

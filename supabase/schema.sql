@@ -1,5 +1,5 @@
 -- ============================================================
--- cissp.world — Supabase schema
+-- cissp.world - Supabase schema
 -- Run this once in your Supabase project: SQL Editor → New query
 -- ============================================================
 

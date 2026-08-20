@@ -1,5 +1,5 @@
 // ============================================================
-// cissp.world — UI controller
+// cissp.world - UI controller
 // ============================================================
 
 (function () {
@@ -122,7 +122,7 @@
         <h3>${m.label}</h3>
         <div class="mode-meta">
           Up to <strong>${m.max} questions</strong> · ${m.minutes} minutes<br>
-          Adaptive — may end after ${m.min} questions once the engine is confident.
+          Adaptive - may end after ${m.min} questions once the engine is confident.
         </div>
         <button class="btn primary" data-mode="${key}">Start</button>`;
       div.querySelector("button").addEventListener("click", () => startAgreement(key));
@@ -164,7 +164,7 @@
 
   // ---------------- exam ----------------
   async function beginExam(mode) {
-    // Never start with an empty bank (e.g., the download failed earlier) —
+    // Never start with an empty bank (e.g., the download failed earlier) -
     // retry the load, and refuse to start if it still isn't there.
     if (bank.length === 0 && !(await loadBank())) {
       alert("The question bank could not be loaded. Please check your connection and refresh the page.");
@@ -203,7 +203,7 @@
     $("exam-progress").textContent =
       `Question ${exam.answered() + 1}` +
       (exam.limits ? ` of up to ${exam.limits.max}` : "");
-    $("q-domain").textContent = `Domain ${q.domain} — ${cfg.DOMAIN_NAMES[q.domain]}`;
+    $("q-domain").textContent = `Domain ${q.domain} - ${cfg.DOMAIN_NAMES[q.domain]}`;
     $("q-text").textContent = q.question;
     const wrap = $("q-options");
     wrap.innerHTML = "";
@@ -267,13 +267,13 @@
     const banner = $("result-banner");
     if (s.passed) {
       banner.className = "result-banner pass";
-      banner.textContent = "Congratulations — you have PASSED this practice examination.";
+      banner.textContent = "Congratulations - you have PASSED this practice examination.";
     } else {
       banner.className = "result-banner fail";
       banner.textContent = "You did not pass this practice examination.";
     }
     const endMap = {
-      confident: "The exam ended early because the engine reached a confident assessment of your ability — exactly how the real adaptive exam behaves.",
+      confident: "The exam ended early because the engine reached a confident assessment of your ability - exactly how the real adaptive exam behaves.",
       max: "You answered the maximum number of questions for this exam mode.",
       time: "The exam ended because time expired.",
       quit: "The exam was ended by the candidate before completion."
@@ -306,7 +306,7 @@
     list.innerHTML = "";
     const items = lastSummary.responses.filter(r => !onlyWrong || !r.correct);
     if (items.length === 0) {
-      list.innerHTML = `<p class="muted">Nothing to review — every answer was correct. Outstanding.</p>`;
+      list.innerHTML = `<p class="muted">Nothing to review - every answer was correct. Outstanding.</p>`;
       return;
     }
     items.forEach((r, idx) => {
@@ -322,7 +322,7 @@
         <div class="rq">${idx + 1}. ${r.q.question}</div>
         ${opts}
         <div class="rexp"><strong>Explanation:</strong> ${r.q.explanation}</div>
-        <div class="rmeta">Domain ${r.q.domain} — ${cfg.DOMAIN_NAMES[r.q.domain]} · Question ID ${r.q.id}</div>`;
+        <div class="rmeta">Domain ${r.q.domain} - ${cfg.DOMAIN_NAMES[r.q.domain]} · Question ID ${r.q.id}</div>`;
       list.appendChild(div);
     });
   }

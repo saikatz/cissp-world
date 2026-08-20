@@ -11,7 +11,7 @@
 // theta while keeping the domain mix close to the official
 // exam blueprint. Stopping: once the minimum length is reached,
 // the exam ends early when the confidence interval around theta
-// is entirely above or below the proficiency threshold —
+// is entirely above or below the proficiency threshold -
 // the same idea the real CISSP CAT exam uses.
 // ============================================================
 
@@ -155,7 +155,7 @@
       for (const d of Object.keys(cfg().DOMAIN_WEIGHTS)) {
         const rs = this.responses.filter(r => String(r.domain) === d);
         if (rs.length === 0) {
-          report.push({ domain: Number(d), name: cfg().DOMAIN_NAMES[d], items: 0, level: "—" });
+          report.push({ domain: Number(d), name: cfg().DOMAIN_NAMES[d], items: 0, level: "-" });
           continue;
         }
         let t = this.theta;
