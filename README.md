@@ -19,7 +19,7 @@ hosted at [cissp.world](https://cissp.world).
 - **Study review** - after the exam, review missed questions with explanations.
 - **Accounts** - sign in to track exam history across devices (Supabase), or use
   guest/practice mode with browser-local storage.
-- **660 original questions** across all 8 domains, weighted to the official exam
+- **1,160 original questions** across all 8 domains, weighted to the official exam
   outline, with explanations for every answer.
 
 ## Licensing

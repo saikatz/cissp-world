@@ -63,7 +63,7 @@ First time setup, in Supabase **SQL Editor -> New query**:
 1. Run `private/seed-1-schema.sql` (creates the table, the `question_content`
    view, and the `check_answer` function).
 2. Run `private/seed-2-data.sql`, then `seed-3-data.sql`, then `seed-4-data.sql`.
-3. The last file ends with a check that should report **660 total, 20 free_sample**.
+3. The last file ends with a check that should report **1,160 total, 20 free_sample**.
 
 To change questions later, edit `private/questions-master.json`, regenerate the
 seed files, and re-run them. The `private/` folder is git ignored on purpose so
