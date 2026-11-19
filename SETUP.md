@@ -49,10 +49,11 @@ Until Supabase is configured, the site still works fully in guest/practice mode.
 4. Back in GitHub Pages settings, wait for the DNS check to pass, then tick
    **Enforce HTTPS** (the certificate can take up to an hour to issue).
 
-## 3. Daily question updates - nothing to do
+## 3. Updating the question bank
 
-The GitHub Action in `.github/workflows/daily-questions.yml` runs every day at
-06:17 UTC. It fetches questions only from sources in `data/sources.json` that a
-human has marked license- and provenance-verified, dedupes and validates them,
-and commits any additions - which automatically redeploys the site. You can run
-it manually anytime from the repo's **Actions** tab.
+The question bank is a single file, `data/questions.json`. To add or change
+questions, edit that file and push: GitHub Pages redeploys the site automatically.
+
+There is no scheduled job and no community submission process. The bank is
+copyrighted and closed to outside contributions, so nothing ingests questions
+from anywhere else.

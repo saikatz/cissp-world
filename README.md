@@ -1,9 +1,9 @@
 # cissp.world - Adaptive CISSP Practice Exam
 
-A free, open-source **computerized adaptive testing (CAT)** engine for CISSP exam
-preparation, hosted at [cissp.world](https://cissp.world).
+A free **computerized adaptive testing (CAT)** engine for CISSP exam preparation,
+hosted at [cissp.world](https://cissp.world).
 
-> CISSP® is a registered trademark of ISC2. This project is an independent,
+> CISSP is a registered trademark of ISC2. This project is an independent,
 > unofficial study tool. It is **not** affiliated with or endorsed by ISC2 and
 > contains **no real exam content**.
 
@@ -19,38 +19,26 @@ preparation, hosted at [cissp.world](https://cissp.world).
 - **Study review** - after the exam, review missed questions with explanations.
 - **Accounts** - sign in to track exam history across devices (Supabase), or use
   guest/practice mode with browser-local storage.
-- **Self-growing question bank** - a daily GitHub Action ingests new questions from
-  verified openly licensed sources and validates the whole bank.
+- **660 original questions** across all 8 domains, weighted to the official exam
+  outline, with explanations for every answer.
 
 ## Licensing
 
 - **Code**: [MIT](LICENSE)
-- **Questions** (`data/questions.json`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) -
-  original works created for this project or ingested from sources whose open
-  license *and* provenance were verified by a human (see `data/sources.json`).
+- **Questions** (`data/questions.json`): **Copyright (c) 2026 cissp.world.
+  All rights reserved.** The question bank is **not** open source. It may not be
+  copied, redistributed, republished, sold, bundled into another product or dataset,
+  or used to train machine learning models, in whole or in part. It is provided
+  solely for personal study use on cissp.world.
 
-## Contributing questions
+## Contributions
 
-Open a pull request adding questions to `data/community-submissions.json` in this
-format (they are merged into the bank by the daily job after PR review):
-
-```json
-{
-  "domain": 4,
-  "difficulty": 0.3,
-  "question": "…",
-  "options": ["…", "…", "…", "…"],
-  "answer": 1,
-  "explanation": "…"
-}
-```
-
-By submitting, you confirm the question is **your original work** and you license it
-under CC BY-SA 4.0. Questions copied from books, courses, or exam dumps are rejected.
+This project does not accept question submissions. Pull requests that add or modify
+`data/questions.json` will be closed.
 
 ## Development
 
-Static site - no build step. Serve the folder with any web server:
+Static site, no build step. Serve the folder with any web server:
 
 ```
 python -m http.server 8000
