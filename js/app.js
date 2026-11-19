@@ -7,8 +7,8 @@
   const $ = (id) => document.getElementById(id);
 
   let user = null;
-  let bank = [];
-  let bankMeta = {};
+  let bank = [];            // lightweight index: {id, domain, difficulty}
+  let loadFailures = 0;
   let exam = null;            // AdaptiveExam
   let pendingMode = null;
   let selectedOption = null;
@@ -27,30 +27,26 @@
   }
 
   // ---------------- boot ----------------
+  // Pulls only {id, domain, difficulty} for every question the signed-in
+  // state is entitled to. No question text, options, answers or explanations.
   async function loadBank() {
     try {
-      const res = await fetch("data/questions.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const data = await res.json();
-      if (!Array.isArray(data.questions) || data.questions.length === 0)
-        throw new Error("empty bank");
-      bank = data.questions;
-      bankMeta = data.meta || {};
+      bank = await window.Store.questionIndex();
+      if (!bank.length) throw new Error("empty index");
       return true;
     } catch (e) {
-      console.error("Question bank load failed:", e.message);
+      console.error("Question index load failed:", e.message);
       return false;
     }
   }
 
   async function boot() {
-    if (!window.Store.cloud) $("local-note").hidden = false;
-    if (!(await loadBank())) {
-      $("auth-error").textContent = "Could not load the question bank. Please refresh.";
-      $("auth-error").hidden = false;
+    if (!window.Store.cloud) {
+      authError("This site is not configured, so the question bank is unavailable.");
+      return;
     }
     user = await window.Store.currentUser();
-    if (user) enterDashboard();
+    if (user) await enterDashboard();
   }
 
   // ---------------- auth ----------------
@@ -93,6 +89,14 @@
 
   $("auth-pass").addEventListener("keydown", (e) => { if (e.key === "Enter") $("btn-auth").click(); });
 
+  $("btn-upsell-register").addEventListener("click", async (e) => {
+    e.preventDefault();
+    await window.Store.signOut();
+    user = null;
+    if (!registering) $("auth-switch-link").click();
+    show("screen-login");
+  });
+
   $("btn-guest").addEventListener("click", async () => {
     user = await window.Store.guest();
     enterDashboard();
@@ -106,16 +110,25 @@
 
   // ---------------- dashboard ----------------
   async function enterDashboard() {
+    // Entitlement is decided by the server, so refresh the index on every
+    // return to the dashboard (sign in, sign out, guest, end of exam).
+    if (!(await loadBank())) {
+      authError("Could not reach the question bank. Check your connection and sign in again.");
+      show("screen-login");
+      return;
+    }
     const name = window.Store.displayName(user);
+    const isGuest = !!(user && user.guest);
     $("dash-user").textContent = name;
     $("dash-greeting").textContent = `Welcome, ${name}`;
     $("bank-count").textContent = bank.length;
-    $("bank-updated").textContent = bankMeta.updated
-      ? `Last updated ${bankMeta.updated}.` : "";
+    $("bank-updated").textContent = "";
+    $("guest-upsell").hidden = !isGuest;
 
     const cards = $("mode-cards");
     cards.innerHTML = "";
     for (const [key, m] of Object.entries(cfg.MODES)) {
+      if (!!m.guestOnly !== isGuest) continue;
       const div = document.createElement("div");
       div.className = "mode-card";
       div.innerHTML = `
@@ -194,16 +207,37 @@
     }
   }
 
-  function nextQuestion() {
+  async function nextQuestion() {
     const q = exam.nextQuestion();
     if (!q) { finishExam(); return; }
     selectedOption = null;
-    questionShownAt = Date.now();
     $("btn-next").disabled = true;
     $("exam-progress").textContent =
       `Question ${exam.answered() + 1}` +
       (exam.limits ? ` of up to ${exam.limits.max}` : "");
     $("q-domain").textContent = `Domain ${q.domain} - ${cfg.DOMAIN_NAMES[q.domain]}`;
+    $("q-text").textContent = "Loading question...";
+    $("q-options").innerHTML = "";
+
+    // Question text and options are fetched one at a time, never in bulk.
+    try {
+      const content = await window.Store.questionContent(q.id);
+      q.question = content.question;
+      q.options = content.options;
+      loadFailures = 0;
+    } catch (e) {
+      console.error("Question load failed:", q.id, e.message);
+      exam.remaining.delete(q.id);
+      if (++loadFailures >= 3 || exam.remaining.size === 0) {
+        alert("The question bank could not be reached. Your answers so far will be scored.");
+        exam.quit();
+        finishExam();
+        return;
+      }
+      return nextQuestion();
+    }
+
+    questionShownAt = Date.now();
     $("q-text").textContent = q.question;
     const wrap = $("q-options");
     wrap.innerHTML = "";
@@ -234,10 +268,23 @@
     }
   });
 
-  $("btn-next").addEventListener("click", () => {
+  $("btn-next").addEventListener("click", async () => {
     if (selectedOption === null || finishing) return;
     $("btn-next").disabled = true;
-    const { done } = exam.submitAnswer(selectedOption, Date.now() - questionShownAt);
+    const q = exam.current;
+    let graded;
+    try {
+      // The correct answer is released only now, after the candidate commits.
+      graded = await window.Store.checkAnswer(q.id, selectedOption);
+    } catch (e) {
+      console.error("Grading failed:", e.message);
+      $("btn-next").disabled = false;
+      alert("That answer could not be submitted. Check your connection and try again.");
+      return;
+    }
+    q.answer = graded.answer;
+    q.explanation = graded.explanation;
+    const { done } = exam.submitAnswer(selectedOption, graded.correct, Date.now() - questionShownAt);
     if (done) finishExam();
     else nextQuestion();
   });

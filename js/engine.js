@@ -51,7 +51,9 @@
 
   class AdaptiveExam {
     /**
-     * @param {Array} bank - question objects {id, domain, question, options, answer, explanation, difficulty}
+     * @param {Array} bank - lightweight index entries {id, domain, difficulty}.
+     *   Question text and options are fetched one at a time, and the correct
+     *   answer is graded server side and passed into submitAnswer().
      * @param {string} mode - "short" | "medium" | "full"
      */
     constructor(bank, mode) {
@@ -99,11 +101,14 @@
       return this.current;
     }
 
-    /** @returns {{correct:boolean, done:boolean}} */
-    submitAnswer(chosenIndex, timeMs) {
+    /**
+     * @param {number} chosenIndex - option the candidate selected
+     * @param {boolean} correct - verdict returned by the server
+     * @returns {{correct:boolean, done:boolean}}
+     */
+    submitAnswer(chosenIndex, correct, timeMs) {
       const q = this.current;
       if (!q || this.finished) return { correct: false, done: true };
-      const correct = chosenIndex === q.answer;
       this.remaining.delete(q.id);
       this.domainCounts[String(q.domain)]++;
       this.responses.push({

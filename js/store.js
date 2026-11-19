@@ -72,6 +72,45 @@
         || (user.email ? user.email.split("@")[0] : "Candidate");
     },
 
+    // ---------- question bank (server gated) ----------
+    // The bank is never shipped to the browser as a file. We pull a light
+    // index for the adaptive engine, then one question at a time, and the
+    // correct answer only once the candidate has committed to a choice.
+    // Signed-out visitors receive only the free sample; the server decides.
+    async questionIndex() {
+      if (!sb) throw new Error("The question bank is unavailable: this site is not configured.");
+      const { data, error } = await sb
+        .from("question_content")
+        .select("id,domain,difficulty")
+        .limit(5000);
+      if (error) throw new Error(error.message);
+      return (data || []).map(r => ({
+        id: r.id, domain: Number(r.domain), difficulty: Number(r.difficulty)
+      }));
+    },
+
+    async questionContent(id) {
+      if (!sb) throw new Error("The question bank is unavailable.");
+      const { data, error } = await sb
+        .from("question_content")
+        .select("question,options")
+        .eq("id", id)
+        .single();
+      if (error) throw new Error(error.message);
+      return data;
+    },
+
+    // Grading happens server side so the correct answer never reaches the
+    // browser before the candidate answers.
+    async checkAnswer(id, choice) {
+      if (!sb) throw new Error("The question bank is unavailable.");
+      const { data, error } = await sb.rpc("check_answer", { p_id: id, p_choice: choice });
+      if (error) throw new Error(error.message);
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) throw new Error("That question could not be graded.");
+      return { correct: !!row.correct, answer: row.answer, explanation: row.explanation };
+    },
+
     // ---------- exam results ----------
     async saveExam(user, summary) {
       const record = {

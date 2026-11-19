@@ -14,7 +14,10 @@ window.CISSP_CONFIG = {
   MODES: {
     short:  { label: "Short Exam",  max: 50,  min: 25,  minutes: 60  },
     medium: { label: "Medium Exam", max: 100, min: 50,  minutes: 120 },
-    full:   { label: "Full Exam",   max: 150, min: 100, minutes: 180 }
+    full:   { label: "Full Exam",   max: 150, min: 100, minutes: 180 },
+    // Shown only to signed-out visitors. The server releases just these
+    // questions to anonymous sessions.
+    sample: { label: "Free Sample", max: 20, min: 20, minutes: 30, guestOnly: true }
   },
 
   // CAT parameters

@@ -49,11 +49,22 @@ Until Supabase is configured, the site still works fully in guest/practice mode.
 4. Back in GitHub Pages settings, wait for the DNS check to pass, then tick
    **Enforce HTTPS** (the certificate can take up to an hour to issue).
 
-## 3. Updating the question bank
+## 3. The question bank lives in Supabase, not in this repo
 
-The question bank is a single file, `data/questions.json`. To add or change
-questions, edit that file and push: GitHub Pages redeploys the site automatically.
+The questions are stored in a `questions` table in Supabase and are never
+published as a file. The browser receives only a list of question ids with their
+domain and difficulty, then fetches one question at a time. The correct answer
+and explanation are returned by the `check_answer` function only after the
+candidate has committed to a choice. Signed out visitors are limited by the
+database itself to a 20 question free sample.
 
-There is no scheduled job and no community submission process. The bank is
-copyrighted and closed to outside contributions, so nothing ingests questions
-from anywhere else.
+First time setup, in Supabase **SQL Editor -> New query**:
+
+1. Run `private/seed-1-schema.sql` (creates the table, the `question_content`
+   view, and the `check_answer` function).
+2. Run `private/seed-2-data.sql`, then `seed-3-data.sql`, then `seed-4-data.sql`.
+3. The last file ends with a check that should report **660 total, 20 free_sample**.
+
+To change questions later, edit `private/questions-master.json`, regenerate the
+seed files, and re-run them. The `private/` folder is git ignored on purpose so
+the question bank never reaches the public repository.
